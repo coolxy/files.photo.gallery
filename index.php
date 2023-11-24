@@ -113,7 +113,7 @@ class config {
     'video_ffmpeg_path' => 'ffmpeg',
 
     // language
-    'lang_default' => 'en',
+    'lang_default' => 'zh',
     'lang_auto' => true,
   );
 
@@ -353,8 +353,9 @@ if(theme !== 'contrast') document.documentElement.dataset.theme = theme;
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title><?php echo $title; ?></title>
     <?php get_include('include/head.html'); ?>
-    //<link href="<?php echo config::$assets ?>files.photo.gallery@<?php echo config::$version ?>/css/files.css" rel="stylesheet">
-    <link href="/css/files.css" rel="stylesheet">
+    <!--下面一行是css/files.css文件本地化-->
+    <!--link href="<?php echo config::$assets ?>files.photo.gallery@<?php echo config::$version ?>/css/files.css" rel="stylesheet"-->
+    <link href="css/files.css" rel="stylesheet">
     <?php get_include('css/custom.css'); ?>
   </head>
 <?php
@@ -1859,8 +1860,10 @@ $wtc = config::$config[base64_decode('bGljZW5zZV9rZXk')];
 
 // look for custom language files _files/lang/*.json
 function lang_custom() {
+  //$dir = config::$storage_path ? config::$storage_path . '/lang' : false;
   $dir = config::$storage_path ? config::$storage_path . '/lang' : false;
-  $files = $dir && file_exists($dir) ? glob($dir . '/*.json') : false;
+  //$files = $dir && file_exists($dir) ? glob($dir . '/*.json') : false;
+  $files = $dir && file_exists($dir) ? glob($dir .'/*.json') : false;
   if(empty($files)) return false;
   $langs = array();
   foreach ($files as $path) {

@@ -75,6 +75,6 @@ return array (
   //'popup_video' => true,
   //'video_thumbs' => true,
   //'video_ffmpeg_path' => 'ffmpeg',
-  //'lang_default' => 'en',
+  //'lang_default' => 'zh',
   //'lang_auto' => true,
 );
