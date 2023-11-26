@@ -15,7 +15,7 @@ return array (
   //'image_resize_dimensions' => 320,
   //'image_resize_dimensions_retina' => 480,
   //'image_resize_dimensions_allowed' => '',
-  //'image_resize_types' => 'jpeg, png, gif, webp, bmp, avif',
+  //'image_resize_types' => 'jpeg, png, gif, webp, bmp',
   //'image_resize_quality' => 85,
   //'image_resize_function' => 'imagecopyresampled',
   //'image_resize_sharpen' => true,
@@ -75,6 +75,6 @@ return array (
   //'popup_video' => true,
   //'video_thumbs' => true,
   //'video_ffmpeg_path' => 'ffmpeg',
-  //'lang_default' => 'zh',
+  //'lang_default' => 'en',
   //'lang_auto' => true,
 );
