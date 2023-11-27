@@ -1,6 +1,6 @@
 <?php
 
-/* Files Gallery 0.8.4
+/* Files app 0.8.0
 www.files.gallery | www.files.gallery/docs/ | www.files.gallery/docs/license/
 ---
 This PHP file is only 10% of the application, used only to connect with the file system. 90% of the codebase, including app logic, interface, design and layout is managed by the app Javascript and CSS files. */
@@ -113,7 +113,7 @@ class config {
     'video_ffmpeg_path' => 'ffmpeg',
 
     // language
-    'lang_default' => 'zh',
+    'lang_default' => 'en',
     'lang_auto' => true,
   );
 
@@ -123,7 +123,7 @@ class config {
   // app vars
   static $__dir__ = __DIR__;
   static $__file__ = __FILE__;
-  static $version = '0.8.4';
+  static $version = '0.8.0';
   static $root;
   static $doc_root;
   static $has_login = false;
@@ -353,9 +353,7 @@ if(theme !== 'contrast') document.documentElement.dataset.theme = theme;
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title><?php echo $title; ?></title>
     <?php get_include('include/head.html'); ?>
-    <!--下面一行是css/files.css文件本地化-->
     <link href="<?php echo config::$assets ?>files.photo.gallery@<?php echo config::$version ?>/css/files.css" rel="stylesheet">
-    <!--link href="css/files.css" rel="stylesheet"-->
     <?php get_include('css/custom.css'); ?>
   </head>
 <?php
@@ -914,11 +912,9 @@ function get_dirs($path = false, &$arr = array(), $depth = 0) {
   }
 
   // get dirs from files array if $data['files'] or glob subdirs
-  // disabled, because symlink absolute paths will mess up the menu, and it's not worth it.
-  /*$subdirs = isset($data['files']) ? array_filter(array_map(function($file) use ($path){
+  $subdirs = isset($data['files']) ? array_filter(array_map(function($file){
     return $file['filetype'] === 'dir' ? root_absolute($file['path']) : false;
-  }, $data['files'])) : glob(glob_escape($path) . '/*', GLOB_NOSORT|GLOB_ONLYDIR);*/
-  $subdirs = glob(glob_escape($path) . '/*', GLOB_NOSORT|GLOB_ONLYDIR);
+  }, $data['files'])) : glob(glob_escape($path) . '/*', GLOB_NOSORT|GLOB_ONLYDIR);
 
   // sort and loop subdirs
   if(!empty($subdirs)) foreach(get_menu_sort($subdirs) as $subdir) get_dirs($subdir, $arr, $depth + 1);
@@ -1860,10 +1856,8 @@ $wtc = config::$config[base64_decode('bGljZW5zZV9rZXk')];
 
 // look for custom language files _files/lang/*.json
 function lang_custom() {
-  //$dir = config::$storage_path ? config::$storage_path . '/lang' : false;
   $dir = config::$storage_path ? config::$storage_path . '/lang' : false;
-  //$files = $dir && file_exists($dir) ? glob($dir . '/*.json') : false;
-  $files = $dir && file_exists($dir) ? glob($dir .'/*.json') : false;
+  $files = $dir && file_exists($dir) ? glob($dir . '/*.json') : false;
   if(empty($files)) return false;
   $langs = array();
   foreach ($files as $path) {
@@ -1986,8 +1980,6 @@ get_header($init_path ? _basename($init_path) : '/', 'menu-' . ($menu_exists ? '
 const _c = <?php echo json_encode($json_config, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_PARTIAL_OUTPUT_ON_ERROR); ?>;
 var CodeMirror = {};
     </script>
-  
-    
     <?php
 
     // load _files/js/custom.js if exists
@@ -1995,27 +1987,22 @@ var CodeMirror = {};
 
     // load all Javascript assets
     foreach (array_filter([
-      'js/toastify.min.js',
-      'js/sweetalert2.min.js',
-      'js/anime.min.js',
-      'js/list.min.js',
-      'js/yall.min.js',
-      'js/filesize.min.js',
-      'js/screenfull.min.js',
-      'js/dayjs.min.js',
-      'js/localizedFormat.js',
-      'js/relativeTime.js',
-      //(in_array(config::$config['download_dir'], ['zip', 'files']) ? 'js/js-file-downloader.min.js' : false),
-      //(in_array(['download_dir'], ['zip', 'files']) ? 'js/js-file-downloader.min.js' : true),
-      'js/js-file-downloader.min.js' ,
-      //(['download_dir'] === 'browser' ? 'js/jszip.min.js' : true),
-      'js/jszip.min.js',
-      //(['download_dir'] === 'browser' ? 'js/FileSaver.min.js' : true),
-      'js/FileSaver.min.js',
-      'js/meta.js',
-      'js/files.js'
-      
-    ]) as $key) echo '<script src="' . $key . '"></script>';
+      'toastify-js@1.12.0/src/toastify.min.js',
+      'sweetalert2@11.7.20/dist/sweetalert2.min.js',
+      'animejs@3.2.1/lib/anime.min.js',
+      '@exeba/list.js@2.3.1/dist/list.min.js',
+      'yall-js@3.2.0/dist/yall.min.js',
+      'filesize@9.0.11/lib/filesize.min.js',
+      'screenfull@5.2.0/dist/screenfull.min.js',
+      'dayjs@1.11.9/dayjs.min.js',
+      'dayjs@1.11.9/plugin/localizedFormat.js',
+      'dayjs@1.11.9/plugin/relativeTime.js',
+      (in_array(config::$config['download_dir'], ['zip', 'files']) ? 'js-file-downloader@1.1.25/dist/js-file-downloader.min.js' : false),
+      (config::$config['download_dir'] === 'browser' ? 'jszip@3.10.1/dist/jszip.min.js' : false),
+      (config::$config['download_dir'] === 'browser' ? 'file-saver@2.0.5/dist/FileSaver.min.js' : false),
+      'codemirror@5.65.14/mode/meta.js',
+      'files.photo.gallery@' . config::$version . '/js/files.js'
+    ]) as $key) echo '<script src="' . config::$assets . $key . '"></script>';
     ?>
   </body>
 </html>
