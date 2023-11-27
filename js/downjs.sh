@@ -12,5 +12,5 @@ wget https://cdn.jsdelivr.net/npm/js-file-downloader@1.1.25/dist/js-file-downloa
 wget https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js
 wget https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
 wget https://cdn.jsdelivr.net/npm/codemirror@5.65.14/mode/meta.js
-wget https://cdn.jsdelivr.net/npm/files.photo.gallery@0.8.4/js/files.js
+#wget https://cdn.jsdelivr.net/npm/files.photo.gallery@0.8.4/js/files.js
 

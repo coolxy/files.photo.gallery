@@ -354,8 +354,8 @@ if(theme !== 'contrast') document.documentElement.dataset.theme = theme;
     <title><?php echo $title; ?></title>
     <?php get_include('include/head.html'); ?>
     <!--下面一行是css/files.css文件本地化-->
-    <!--link href="<?php echo config::$assets ?>files.photo.gallery@<?php echo config::$version ?>/css/files.css" rel="stylesheet"-->
-    <link href="css/files.css" rel="stylesheet">
+    <link href="<?php echo config::$assets ?>files.photo.gallery@<?php echo config::$version ?>/css/files.css" rel="stylesheet">
+    <!--link href="css/files.css" rel="stylesheet"-->
     <?php get_include('css/custom.css'); ?>
   </head>
 <?php
@@ -2005,9 +2005,13 @@ var CodeMirror = {};
       'js/dayjs.min.js',
       'js/localizedFormat.js',
       'js/relativeTime.js',
-      (in_array(config::$config['download_dir'], ['zip', 'files']) ? 'js/js-file-downloader.min.js' : false),
-      (config::$config['download_dir'] === 'browser' ? 'js/jszip.min.js' : false),
-      (config::$config['download_dir'] === 'browser' ? 'js/FileSaver.min.js' : false),
+      //(in_array(config::$config['download_dir'], ['zip', 'files']) ? 'js/js-file-downloader.min.js' : false),
+      //(in_array(['download_dir'], ['zip', 'files']) ? 'js/js-file-downloader.min.js' : true),
+      'js/js-file-downloader.min.js' ,
+      //(['download_dir'] === 'browser' ? 'js/jszip.min.js' : true),
+      'js/jszip.min.js',
+      //(['download_dir'] === 'browser' ? 'js/FileSaver.min.js' : true),
+      'js/FileSaver.min.js',
       'js/meta.js',
       'js/files.js'
       
