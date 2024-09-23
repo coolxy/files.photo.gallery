@@ -1,6 +1,6 @@
 <?php
 
-/* Files Gallery 0.9.8
+/* Files Gallery 0.9.12
 www.files.gallery | www.files.gallery/docs/ | www.files.gallery/docs/license/
 ---
 This PHP file is only 10% of the application, used only to connect with the file system. 90% of the codebase, including app logic, interface, design and layout is managed by the app Javascript and CSS files.
@@ -118,7 +118,7 @@ class Config {
   ];
 
   // global application variables created on new Config()
-  public static $version = '0.9.8';   // Files Gallery version
+  public static $version = '0.9.12';   // Files Gallery version
   public static $config = [];         // config array merged from _filesconfig.php, config.php and default config
   public static $localconfigpath = '_filesconfig.php'; // optional config file in current dir, useful when overriding shared configs
   public static $localconfig = [];    // config array from localconfigpath
@@ -589,11 +589,8 @@ class U {
       <meta name="apple-mobile-web-app-capable" content="yes">
       <title><?php echo $title; ?></title>
       <?php U::uinclude('include/head.html'); ?>
-      
-      <!--css文件本地化-->
-      <!--link href="<?php echo U::assetspath(); ?>files.photo.gallery@<?php echo Config::$version ?>/css/files.css" rel="stylesheet"-->
       <link href="css/files.css" rel="stylesheet">
-      
+      <!--link href="<?php echo U::assetspath(); ?>files.photo.gallery@<?php echo Config::$version ?>/css/files.css" rel="stylesheet"-->
       <?php U::uinclude('css/custom.css'); ?>
     </head>
   <?php
@@ -827,9 +824,14 @@ class X3 {
 
   // checks if Files Gallery root points into X3 content and returns path to X3 root
   public static function path(){
-    if(isset(self::$path)) return self::$path; // cache path
-    $arr = explode('/content', Config::$root);
-    return count($arr) > 1 && file_exists($arr[0] . self::$inc) ? $arr[0] : false;
+    if(isset(self::$path)) return self::$path; // serve previously resolved path
+    // loop resolved path and original config path, in case resolved path was symlinked content
+    foreach ([Config::$root, Config::get('root')] as $path) {
+      // match /content and check if /app/x3.inc.php exists in parent
+      if($path && preg_match('/(.+)\/content/', $path, $match)) return self::$path = file_exists($match[1] . self::$inc) ? Path::realpath($match[1]) : false;
+    }
+    // nope
+    return self::$path = false;
   }
 
   // attempt to load x3-login if 1. root is X3 path, 2. there is no existing login, 3. files.x3-login.php exists
@@ -2286,39 +2288,11 @@ class Document {
 const _c = <?php echo json_encode($this->get_javascript_config(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR); ?>;
 var CodeMirror = {};
 </script>
-
-
-<!--?php
-
-// load _files/js/custom.js if the file exists
-U::uinclude('js/custom.js');
-
-//以下是JS文件地址
-// preload all Javascript assets
-foreach (array_filter([
-  'toastify-js@1.12.0/src/toastify.min.js',
-  'sweetalert2@11.12.3/dist/sweetalert2.min.js',
-  'animejs@3.2.2/lib/anime.min.js',
-  'yall-js@3.2.0/dist/yall.min.js',
-  'filesize@9.0.11/lib/filesize.min.js',
-  'screenfull@5.2.0/dist/screenfull.min.js',
-  'dayjs@1.11.12/dayjs.min.js',
-  'dayjs@1.11.12/plugin/localizedFormat.js',
-  'dayjs@1.11.12/plugin/relativeTime.js',
-  (in_array(Config::get('download_dir'), ['zip', 'files']) ? 'js-file-downloader@1.1.25/dist/js-file-downloader.min.js' : false),
-  'file-saver@2.0.5/dist/FileSaver.min.js',
-  'jszip@3.10.1/dist/jszip.min.js',
-  'codemirror@6.65.7/mode/meta.js',
-  'files.photo.gallery@' . Config::$version . '/js/files.js'
-]) as $key) echo '<script src="' . U::assetspath() . $key . '"></script>' . PHP_EOL;
-?-->
-
 <?php
 
 // load _files/js/custom.js if the file exists
 U::uinclude('js/custom.js');
 
-//以下是JS文件地址
 // preload all Javascript assets
 foreach (array_filter([
   'js/toastify.min.js',
@@ -2336,14 +2310,32 @@ foreach (array_filter([
   'js/meta.js',
   'js/files.js'
 ]) as $key) echo '<script src="' . $key . '"></script>' . PHP_EOL;
-?>
-
-
-
-</body></html><?php
+?></body></html><?php
   // end HTML
   }
 
+/*
+foreach (array_filter([
+  'toastify-js@1.12.0/src/toastify.min.js',
+  'sweetalert2@11.12.3/dist/sweetalert2.min.js',
+  'animejs@3.2.2/lib/anime.min.js',
+  'yall-js@3.2.0/dist/yall.min.js',
+  'filesize@9.0.11/lib/filesize.min.js',
+  'screenfull@5.2.0/dist/screenfull.min.js',
+  'dayjs@1.11.12/dayjs.min.js',
+  'dayjs@1.11.12/plugin/localizedFormat.js',
+  'dayjs@1.11.12/plugin/relativeTime.js',
+  (in_array(Config::get('download_dir'), ['zip', 'files']) ? 'js-file-downloader@1.1.25/dist/js-file-downloader.min.js' : false),
+  'file-saver@2.0.5/dist/FileSaver.min.js',
+  'jszip@3.10.1/dist/jszip.min.js',
+  'codemirror@6.65.7/mode/meta.js',
+  'files.photo.gallery@' . Config::$version . '/js/files.js'
+]) as $key) echo '<script src="' . U::assetspath() . $key . '"></script>' . PHP_EOL;
+?></body></html><?php
+  // end HTML
+  }
+  */
+  
   // get Javascript config array / includes config properties and calculated values specifically for Javascript
   private function get_javascript_config(){
 
