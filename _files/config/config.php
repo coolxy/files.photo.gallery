@@ -3,7 +3,7 @@
 // CONFIG / https://www.files.gallery/docs/config/
 // Uncomment the parameters you want to edit.
 return array (
-  'root' => '/M/photo',
+  //'root' => '',
   //'start_path' => false,
   //'username' => '',
   //'password' => '',
